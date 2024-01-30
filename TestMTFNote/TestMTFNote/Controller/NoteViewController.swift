@@ -8,79 +8,71 @@
 import UIKit
 
 class NoteViewController: UIViewController, EntryViewControllerDelegate {
+    //MARK: - Properties
     var storage: NoteStorageProtocol!
-    var tableView: UITableView = {
-        let tableView = UITableView()
-        tableView.backgroundColor = UIColor(named: Resources.Colors.beige)
-        tableView.translatesAutoresizingMaskIntoConstraints = false
-        return tableView
-    }()
-    
-
-    
     var notes: [NoteItemProtocol] = [] {
         didSet {
             storage.save(notes: notes)
         }
     }
+    //MARK: - Private properties
+    private var noteView = NoteView()
     
+    //MARK: - View Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         storage = NoteStorage()
-        
-        view.backgroundColor = UIColor(named: Resources.Colors.beige)
-        
-        view.addSubview(tableView)
-        constraint()
+        setupView()
         configTableView()
+        loadNotes()
         
-        
+        //Создание кнопки добавления заметки
         let addPluseButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addNewNote))
         addPluseButton.tintColor = UIColor(named: Resources.Colors.pink)
         navigationItem.rightBarButtonItem = addPluseButton
-        
-        loadNotes()
+    }
+    //MARK: - Publish function
+    func entryViewController(_ viewController: EntryViewController, didSaveNote note: NoteItem) {
+        notes.append(note)
+        noteView.tableView.reloadData()
+    }
+    
+    //MARK: - Private function
+    private func setupView() {
+        view.addSubview(noteView)
+        noteView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            noteView.topAnchor.constraint(equalTo: view.topAnchor),
+            noteView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            noteView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            noteView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        ])
+    }
+    private func configTableView() {
+        noteView.tableView.delegate = self
+        noteView.tableView.dataSource = self
+        noteView.tableView.register(UITableViewCell.self, forCellReuseIdentifier: "noteCell")
+        noteView.tableView.allowsSelection = false
     }
     private func loadNotes() {
         notes = storage.load()
         if notes.isEmpty {
             let defaultNote = NoteItem(titleNote: "Конспект: Биология", textNote: "Наблюдение – метод, с помощью которого исследователь собирает информацию об объекте (можно визуально наблюдать за поведением животных, с помощью приборов за изменениями в природе). Выводы, сделанные наблюдателем, проверяются либо повторными наблюдениями, либо экспериментально.")
             notes.append(defaultNote)
-            tableView.reloadData()
+            noteView.tableView.reloadData()
         }
     }
-    
-    func constraint() {
-        NSLayoutConstraint.activate([
-            tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            tableView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-            tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
-            tableView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor)
-        ])
-    }
-    
-    func configTableView() {
-        tableView.delegate = self
-        tableView.dataSource = self
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "noteCell")
-        tableView.allowsSelection = false
-    }
-    
+    // MARK: - objc function
     @objc func addNewNote() {
         let entryViewController = EntryViewController()
         entryViewController.delegate = self
         let navigationController = UINavigationController(rootViewController: entryViewController)
         present(navigationController, animated: true, completion: nil)
     }
-
-    // Implement the delegate method
-    func entryViewController(_ viewController: EntryViewController, didSaveNote note: NoteItem) {
-        notes.append(note)
-        tableView.reloadData()
-    }
     
 }
 
+// MARK: - UITableViewDataSource, UITableViewDelegate extension
 extension NoteViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

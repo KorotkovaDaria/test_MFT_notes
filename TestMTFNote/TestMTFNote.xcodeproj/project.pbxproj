@@ -75,8 +75,20 @@
 			isa = PBXGroup;
 			children = (
 				4E40D87B2B68DCD50071632F /* Resources.swift */,
+				4E52919E2B679F7C0055DD60 /* Assets.xcassets */,
+				4E5291A02B679F7C0055DD60 /* LaunchScreen.storyboard */,
+				4E5291A32B679F7C0055DD60 /* Info.plist */,
 			);
 			path = Resources;
+			sourceTree = "<group>";
+		};
+		4E40D8802B68FA840071632F /* Application */ = {
+			isa = PBXGroup;
+			children = (
+				4E5291952B679F7A0055DD60 /* AppDelegate.swift */,
+				4E5291972B679F7A0055DD60 /* SceneDelegate.swift */,
+			);
+			path = Application;
 			sourceTree = "<group>";
 		};
 		4E5291892B679F7A0055DD60 = {
@@ -98,15 +110,11 @@
 		4E5291942B679F7A0055DD60 /* TestMTFNote */ = {
 			isa = PBXGroup;
 			children = (
+				4E40D8802B68FA840071632F /* Application */,
 				4E40D8762B68D08E0071632F /* Model */,
 				4E40D8782B68D0BB0071632F /* View */,
 				4E40D8772B68D0AC0071632F /* Controller */,
 				4E40D87D2B68DD500071632F /* Resources */,
-				4E5291952B679F7A0055DD60 /* AppDelegate.swift */,
-				4E5291972B679F7A0055DD60 /* SceneDelegate.swift */,
-				4E52919E2B679F7C0055DD60 /* Assets.xcassets */,
-				4E5291A02B679F7C0055DD60 /* LaunchScreen.storyboard */,
-				4E5291A32B679F7C0055DD60 /* Info.plist */,
 			);
 			path = TestMTFNote;
 			sourceTree = "<group>";
@@ -328,7 +336,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = TestMTFNote/Info.plist;
+				INFOPLIST_FILE = TestMTFNote/Resources/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -354,7 +362,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = TestMTFNote/Info.plist;
+				INFOPLIST_FILE = TestMTFNote/Resources/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";

@@ -8,78 +8,43 @@
 import UIKit
 
 class EntryViewController: UIViewController {
+    //MARK: - Properties
     weak var delegate: EntryViewControllerDelegate?
-    
-    let titleTextField: UITextField = {
-        let textField = UITextField()
-        textField.backgroundColor = UIColor(named: Resources.Colors.beige2)
-        textField.placeholder = "Заголовок заметки"
-        textField.borderStyle = .roundedRect
-        textField.textColor = UIColor(named: Resources.Colors.dark)
-        return textField
-    }()
-    
-    let contentTextView: UITextView = {
-        let textView = UITextView()
-        //textView.text = "Введите текст"
-        textView.backgroundColor = UIColor(named: Resources.Colors.beige2)
-        textView.textColor = UIColor(named: Resources.Colors.dark)
-        textView.layer.borderWidth = 1.0
-        textView.layer.borderColor = UIColor.lightGray.cgColor
-        textView.layer.cornerRadius = 5.0
-        return textView
-    }()
+    //MARK: - Private properties
+    private let entryView = EntryView()
 
+    //MARK: - View Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = UIColor(named: Resources.Colors.beige)
-
-
-        view.addSubview(titleTextField)
-        view.addSubview(contentTextView)
-        
-        // Установите констрейнты для текстовых полей
-        titleTextField.translatesAutoresizingMaskIntoConstraints = false
-        contentTextView.translatesAutoresizingMaskIntoConstraints = false
-        
+        view.addSubview(entryView)
+        entryView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            titleTextField.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
-            titleTextField.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 20),
-            titleTextField.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -20),
-            
-            contentTextView.topAnchor.constraint(equalTo: titleTextField.bottomAnchor, constant: 20),
-            contentTextView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 20),
-            contentTextView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -20),
-            contentTextView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20)
+            entryView.topAnchor.constraint(equalTo: view.topAnchor),
+            entryView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            entryView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            entryView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
-        
+        //Создание кнопки Save и Close
         let saveButton = UIBarButtonItem(title: "Save", style: .done, target: self, action: #selector(saveNote))
         let closeButton = UIBarButtonItem(title: "Close", style: .plain, target: self, action: #selector(closeEntryController))
-
-            // Устанавливаем цвет текста для кнопок
             saveButton.tintColor = UIColor(named: Resources.Colors.dark)
             closeButton.tintColor = UIColor(named: Resources.Colors.pink)
-
             navigationItem.rightBarButtonItem = saveButton
             navigationItem.leftBarButtonItem = closeButton
     }
-    
+    // MARK: - objc function
     @objc func saveNote() {
-        
-        let title = titleTextField.text ?? ""
-            let content = contentTextView.text ?? ""
-
-            let newNote = NoteItem(titleNote: title, textNote: content)
-            delegate?.entryViewController(self, didSaveNote: newNote)
-            closeEntryController()
+        let title = entryView.titleTextField.text ?? ""
+        let content = entryView.contentTextView.text ?? ""
+        let newNote = NoteItem(titleNote: title, textNote: content)
+        delegate?.entryViewController(self, didSaveNote: newNote)
+        closeEntryController()
     }
-    
     @objc func closeEntryController() {
-        // Добавьте здесь код для закрытия окна
         dismiss(animated: true, completion: nil)
     }
 }
-
-protocol EntryViewControllerDelegate: AnyObject {
-    func entryViewController(_ viewController: EntryViewController, didSaveNote note: NoteItem)
+    // MARK: - Protocol
+    protocol EntryViewControllerDelegate: AnyObject {
+        func entryViewController(_ viewController: EntryViewController, didSaveNote note: NoteItem)
 }
