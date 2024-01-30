@@ -11,9 +11,13 @@ class NoteViewController: UIViewController, EntryViewControllerDelegate {
     var storage: NoteStorageProtocol!
     var tableView: UITableView = {
         let tableView = UITableView()
+        tableView.backgroundColor = UIColor(named: Resources.Colors.beige)
         tableView.translatesAutoresizingMaskIntoConstraints = false
         return tableView
     }()
+    
+
+    
     var notes: [NoteItemProtocol] = [] {
         didSet {
             storage.save(notes: notes)
@@ -24,15 +28,16 @@ class NoteViewController: UIViewController, EntryViewControllerDelegate {
         super.viewDidLoad()
         storage = NoteStorage()
         
-        view.backgroundColor = .brown
+        view.backgroundColor = UIColor(named: Resources.Colors.beige)
         
         view.addSubview(tableView)
         constraint()
         configTableView()
         
         
-        
-        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addNewNote))
+        let addPluseButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addNewNote))
+        addPluseButton.tintColor = UIColor(named: Resources.Colors.pink)
+        navigationItem.rightBarButtonItem = addPluseButton
         
         loadNotes()
     }
@@ -63,7 +68,7 @@ class NoteViewController: UIViewController, EntryViewControllerDelegate {
     
     @objc func addNewNote() {
         let entryViewController = EntryViewController()
-        entryViewController.delegate = self  // Set the delegate
+        entryViewController.delegate = self
         let navigationController = UINavigationController(rootViewController: entryViewController)
         present(navigationController, animated: true, completion: nil)
     }
@@ -85,9 +90,12 @@ extension NoteViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell(style: .subtitle, reuseIdentifier: "noteCell")
         let noteItem = notes[indexPath.row]
-        
+        cell.backgroundColor = UIColor(named: Resources.Colors.beige2)
         cell.textLabel?.text = noteItem.titleNote
+        cell.textLabel?.font = UIFont.boldSystemFont(ofSize: UIFont.labelFontSize)
+        cell.textLabel?.textColor = UIColor(named: Resources.Colors.dark)
         cell.detailTextLabel?.text = noteItem.textNote
+        cell.detailTextLabel?.textColor = UIColor(named: Resources.Colors.dark)
         return cell
     }
     

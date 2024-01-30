@@ -12,14 +12,18 @@ class EntryViewController: UIViewController {
     
     let titleTextField: UITextField = {
         let textField = UITextField()
+        textField.backgroundColor = UIColor(named: Resources.Colors.beige2)
         textField.placeholder = "Заголовок заметки"
         textField.borderStyle = .roundedRect
+        textField.textColor = UIColor(named: Resources.Colors.dark)
         return textField
     }()
     
     let contentTextView: UITextView = {
         let textView = UITextView()
-        textView.text = "Введите текст"
+        //textView.text = "Введите текст"
+        textView.backgroundColor = UIColor(named: Resources.Colors.beige2)
+        textView.textColor = UIColor(named: Resources.Colors.dark)
         textView.layer.borderWidth = 1.0
         textView.layer.borderColor = UIColor.lightGray.cgColor
         textView.layer.cornerRadius = 5.0
@@ -28,7 +32,7 @@ class EntryViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .darkGray
+        view.backgroundColor = UIColor(named: Resources.Colors.beige)
 
 
         view.addSubview(titleTextField)
@@ -49,8 +53,15 @@ class EntryViewController: UIViewController {
             contentTextView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20)
         ])
         
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Save", style: .done, target: self, action: #selector(saveNote))
-        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Close", style: .plain, target: self, action: #selector(closeEntryController))
+        let saveButton = UIBarButtonItem(title: "Save", style: .done, target: self, action: #selector(saveNote))
+        let closeButton = UIBarButtonItem(title: "Close", style: .plain, target: self, action: #selector(closeEntryController))
+
+            // Устанавливаем цвет текста для кнопок
+            saveButton.tintColor = UIColor(named: Resources.Colors.dark)
+            closeButton.tintColor = UIColor(named: Resources.Colors.pink)
+
+            navigationItem.rightBarButtonItem = saveButton
+            navigationItem.leftBarButtonItem = closeButton
     }
     
     @objc func saveNote() {
