@@ -8,6 +8,11 @@
 import UIKit
 
 class NoteViewController: UIViewController, EntryViewControllerDelegate {
+    func entryViewController(_ viewController: EntryViewController, didUpdateNote note: NoteItem, at index: Int) {
+        notes[index] = note
+        noteView.tableView.reloadData()
+    }
+    
     //MARK: - Properties
     var storage: NoteStorageProtocol!
     var notes: [NoteItemProtocol] = [] {
@@ -17,7 +22,6 @@ class NoteViewController: UIViewController, EntryViewControllerDelegate {
     }
     //MARK: - Private properties
     private var noteView = NoteView()
-    
     //MARK: - View Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -96,7 +100,21 @@ extension NoteViewController: UITableViewDelegate, UITableViewDataSource {
             self.notes.remove(at: indexPath.row)
             tableView.reloadData()
         }
-        let actions = UISwipeActionsConfiguration(actions: [actionDelete])
+        let actionEdit = UIContextualAction(style: .normal, title: "Edit") { _, _, _ in
+            self.editNote(at: indexPath)
+        }
+        
+        let actions = UISwipeActionsConfiguration(actions: [actionDelete,actionEdit])
         return actions
+    }
+    
+    private func editNote(at indexPath: IndexPath) {
+        let entryViewController = EntryViewController()
+        entryViewController.delegate = self
+        entryViewController.editingNoteIndex = indexPath.row
+        entryViewController.existingNote = notes[indexPath.row] as? NoteItem
+        
+        let navigationController = UINavigationController(rootViewController: entryViewController)
+        present(navigationController, animated: true, completion: nil)
     }
 }

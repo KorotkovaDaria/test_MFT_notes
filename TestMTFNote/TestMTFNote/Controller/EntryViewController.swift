@@ -10,9 +10,9 @@ import UIKit
 class EntryViewController: UIViewController {
     //MARK: - Properties
     weak var delegate: EntryViewControllerDelegate?
-    //MARK: - Private properties
-    private let entryView = EntryView()
-
+    let entryView = EntryView()
+    var existingNote: NoteItem?
+    var editingNoteIndex: Int?
     //MARK: - View Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -24,6 +24,10 @@ class EntryViewController: UIViewController {
             entryView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             entryView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
+        if let existingNote = existingNote {
+            entryView.titleTextField.text = existingNote.titleNote
+            entryView.contentTextView.text = existingNote.textNote
+        }
         //Создание кнопки Save и Close
         let saveButton = UIBarButtonItem(title: "Save", style: .done, target: self, action: #selector(saveNote))
         let closeButton = UIBarButtonItem(title: "Close", style: .plain, target: self, action: #selector(closeEntryController))
@@ -36,8 +40,18 @@ class EntryViewController: UIViewController {
     @objc func saveNote() {
         let title = entryView.titleTextField.text ?? ""
         let content = entryView.contentTextView.text ?? ""
-        let newNote = NoteItem(titleNote: title, textNote: content)
-        delegate?.entryViewController(self, didSaveNote: newNote)
+        
+        var updatedNote: NoteItem
+        if let existingNote = existingNote {
+            updatedNote = existingNote
+            updatedNote.titleNote = title
+            updatedNote.textNote = content
+            delegate?.entryViewController(self, didUpdateNote: updatedNote, at: editingNoteIndex!)
+        } else {
+            updatedNote = NoteItem(titleNote: title, textNote: content)
+            delegate?.entryViewController(self, didSaveNote: updatedNote)
+        }
+        
         closeEntryController()
     }
     @objc func closeEntryController() {
@@ -47,4 +61,5 @@ class EntryViewController: UIViewController {
     // MARK: - Protocol
     protocol EntryViewControllerDelegate: AnyObject {
         func entryViewController(_ viewController: EntryViewController, didSaveNote note: NoteItem)
+        func entryViewController(_ viewController: EntryViewController, didUpdateNote note: NoteItem, at index: Int)
 }
