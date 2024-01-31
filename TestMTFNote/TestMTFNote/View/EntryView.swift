@@ -35,13 +35,14 @@ class EntryView: UIView {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-
+    
     //MARK: - Private setup function
     private func configure() {
         setBackgroundColor()
         setupUI()
-        
     }
+
+    
     private func setBackgroundColor() {
         backgroundColor = UIColor(named: Resources.Colors.beige)
     }
@@ -56,7 +57,7 @@ class EntryView: UIView {
             titleTextField.topAnchor.constraint(equalTo: topAnchor, constant: 60),
             titleTextField.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20),
             titleTextField.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -20),
-                        
+            
             contentTextView.topAnchor.constraint(equalTo: titleTextField.bottomAnchor, constant: 20),
             contentTextView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20),
             contentTextView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -20),

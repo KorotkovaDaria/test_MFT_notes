@@ -6,25 +6,27 @@
 //
 
 import Foundation
+//MARK: - Protocols
 protocol NoteItemProtocol {
     var titleNote: String { get set }
     var textNote: String { get set }
 }
-
 protocol NoteStorageProtocol {
     func load() -> [NoteItemProtocol]
     func save(notes: [NoteItemProtocol])
 }
-
+//MARK: - class NoteStorage
 class NoteStorage: NoteStorageProtocol {
+    //MARK: - Private properties
     private var storage = UserDefaults.standard
     private var storageKey = "notes"
-    
+    //MARK: - Private enum
     private enum NoteKey: String {
         case titleNote
         case textNote
         
     }
+    //MARK: - Function
     func load() -> [NoteItemProtocol] {
         var resultNotes: [NoteItemProtocol] = []
         let notesFromStorage = storage.array(forKey: storageKey) as? [[String:String]] ?? []
@@ -36,7 +38,6 @@ class NoteStorage: NoteStorageProtocol {
         }
         return resultNotes
     }
-    
     func save(notes: [NoteItemProtocol]) {
         var arrForStorage: [[String:String]] = []
         notes.forEach { note in
@@ -47,10 +48,8 @@ class NoteStorage: NoteStorageProtocol {
         }
         storage.set(arrForStorage, forKey: storageKey)
     }
-    
-    
 }
-
+//MARK: - struct NoteItem
 struct NoteItem: NoteItemProtocol {
     var titleNote: String
     var textNote: String

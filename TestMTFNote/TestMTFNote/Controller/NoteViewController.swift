@@ -17,18 +17,15 @@ class NoteViewController: UIViewController, EntryViewControllerDelegate {
     }
     //MARK: - Private properties
     private var noteView = NoteView()
+    private let cellIdentifier = "noteCell"
     //MARK: - View Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         storage = NoteStorage()
         setupView()
-        configTableView()
+        setupTableView()
+        setupNavBarItem()
         loadNotes()
-        
-        //Создание кнопки добавления заметки
-        let addPluseButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addNewNote))
-        addPluseButton.tintColor = UIColor(named: Resources.Colors.pink)
-        navigationItem.rightBarButtonItem = addPluseButton
     }
     //MARK: - Protocol function
     func entryViewController(_ viewController: EntryViewController, didSaveNote note: NoteItem) {
@@ -41,6 +38,11 @@ class NoteViewController: UIViewController, EntryViewControllerDelegate {
     }
     
     //MARK: - Private function
+    private func initializeEntryViewController() -> EntryViewController {
+        let entryViewController = EntryViewController()
+        entryViewController.delegate = self
+        return entryViewController
+    }
     private func setupView() {
         view.addSubview(noteView)
         noteView.translatesAutoresizingMaskIntoConstraints = false
@@ -51,13 +53,23 @@ class NoteViewController: UIViewController, EntryViewControllerDelegate {
             noteView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
     }
-    private func configTableView() {
+    private func setupTableView() {
         noteView.tableView.delegate = self
         noteView.tableView.dataSource = self
-        noteView.tableView.register(UITableViewCell.self, forCellReuseIdentifier: "noteCell")
+        noteView.tableView.register(UITableViewCell.self, forCellReuseIdentifier: cellIdentifier)
         noteView.tableView.allowsSelection = false
         noteView.tableView.separatorStyle = .singleLine
         noteView.tableView.separatorColor = UIColor(named: Resources.Colors.beige)
+    }
+    private func setupNavBarItem() {
+        navigationItem.title = "Notes"
+        navigationController?.navigationBar.titleTextAttributes = [
+            NSAttributedString.Key.foregroundColor: UIColor(named: Resources.Colors.pink)!,
+            NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 18)]
+        
+        let addPluseButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addNewNote))
+        addPluseButton.tintColor = UIColor(named: Resources.Colors.pink)
+        navigationItem.rightBarButtonItem = addPluseButton
     }
     private func loadNotes() {
         notes = storage.load()
@@ -67,10 +79,17 @@ class NoteViewController: UIViewController, EntryViewControllerDelegate {
             noteView.tableView.reloadData()
         }
     }
+    private func editNote(at indexPath: IndexPath) {
+        let entryViewController = initializeEntryViewController()
+        entryViewController.editingNoteIndex = indexPath.row
+        entryViewController.existingNote = notes[indexPath.row] as? NoteItem
+        
+        let navigationController = UINavigationController(rootViewController: entryViewController)
+        present(navigationController, animated: true, completion: nil)
+    }
     // MARK: - objc function
     @objc func addNewNote() {
-        let entryViewController = EntryViewController()
-        entryViewController.delegate = self
+        let entryViewController = initializeEntryViewController()
         let navigationController = UINavigationController(rootViewController: entryViewController)
         present(navigationController, animated: true, completion: nil)
     }
@@ -85,7 +104,7 @@ extension NoteViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = UITableViewCell(style: .subtitle, reuseIdentifier: "noteCell")
+        let cell = UITableViewCell(style: .subtitle, reuseIdentifier: cellIdentifier)
         let noteItem = notes[indexPath.row]
         cell.backgroundColor = UIColor(named: Resources.Colors.beige2)
         cell.layer.cornerRadius = 15
@@ -108,15 +127,5 @@ extension NoteViewController: UITableViewDelegate, UITableViewDataSource {
         
         let actions = UISwipeActionsConfiguration(actions: [actionDelete,actionEdit])
         return actions
-    }
-    
-    private func editNote(at indexPath: IndexPath) {
-        let entryViewController = EntryViewController()
-        entryViewController.delegate = self
-        entryViewController.editingNoteIndex = indexPath.row
-        entryViewController.existingNote = notes[indexPath.row] as? NoteItem
-        
-        let navigationController = UINavigationController(rootViewController: entryViewController)
-        present(navigationController, animated: true, completion: nil)
     }
 }
