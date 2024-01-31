@@ -62,7 +62,7 @@ class NoteViewController: UIViewController, EntryViewControllerDelegate {
         noteView.tableView.separatorColor = UIColor(named: Resources.Colors.beige)
     }
     private func setupNavBarItem() {
-        navigationItem.title = "Notes"
+        navigationItem.title = "MY notes"
         navigationController?.navigationBar.titleTextAttributes = [
             NSAttributedString.Key.foregroundColor: UIColor(named: Resources.Colors.pink)!,
             NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 18)]
