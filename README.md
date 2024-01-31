@@ -1,1 +1,1 @@
-# test_MFT_notes
+# Приложение "My notes" 
