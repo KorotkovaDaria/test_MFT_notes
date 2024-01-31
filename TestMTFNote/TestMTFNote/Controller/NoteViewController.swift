@@ -8,11 +8,6 @@
 import UIKit
 
 class NoteViewController: UIViewController, EntryViewControllerDelegate {
-    func entryViewController(_ viewController: EntryViewController, didUpdateNote note: NoteItem, at index: Int) {
-        notes[index] = note
-        noteView.tableView.reloadData()
-    }
-    
     //MARK: - Properties
     var storage: NoteStorageProtocol!
     var notes: [NoteItemProtocol] = [] {
@@ -35,9 +30,13 @@ class NoteViewController: UIViewController, EntryViewControllerDelegate {
         addPluseButton.tintColor = UIColor(named: Resources.Colors.pink)
         navigationItem.rightBarButtonItem = addPluseButton
     }
-    //MARK: - Publish function
+    //MARK: - Protocol function
     func entryViewController(_ viewController: EntryViewController, didSaveNote note: NoteItem) {
         notes.append(note)
+        noteView.tableView.reloadData()
+    }
+    func entryViewController(_ viewController: EntryViewController, didUpdateNote note: NoteItem, at index: Int) {
+        notes[index] = note
         noteView.tableView.reloadData()
     }
     

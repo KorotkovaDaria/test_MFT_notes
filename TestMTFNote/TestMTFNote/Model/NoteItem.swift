@@ -9,7 +9,6 @@ import Foundation
 protocol NoteItemProtocol {
     var titleNote: String { get set }
     var textNote: String { get set }
-    var id: UUID { get set }
 }
 
 protocol NoteStorageProtocol {
@@ -55,5 +54,4 @@ class NoteStorage: NoteStorageProtocol {
 struct NoteItem: NoteItemProtocol {
     var titleNote: String
     var textNote: String
-    var id: UUID = UUID()
 }

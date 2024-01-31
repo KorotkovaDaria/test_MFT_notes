@@ -36,24 +36,35 @@ class EntryViewController: UIViewController {
             navigationItem.rightBarButtonItem = saveButton
             navigationItem.leftBarButtonItem = closeButton
     }
+    //MARK: - Private function
+    private func showAlert() {
+        let alert = UIAlertController(title: "Заполните поля", message: "Заполните заголовок или текст заметки, чтобы сохранить", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title:"Хорошо" , style: .default))
+        self.present(alert, animated: true)
+    }
     // MARK: - objc function
     @objc func saveNote() {
-        let title = entryView.titleTextField.text ?? ""
-        let content = entryView.contentTextView.text ?? ""
+        let title = entryView.titleTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+        let content = entryView.contentTextView.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
         
-        var updatedNote: NoteItem
-        if let existingNote = existingNote {
-            updatedNote = existingNote
-            updatedNote.titleNote = title
-            updatedNote.textNote = content
-            delegate?.entryViewController(self, didUpdateNote: updatedNote, at: editingNoteIndex!)
+        if title.isEmpty && content.isEmpty {
+            showAlert()
         } else {
-            updatedNote = NoteItem(titleNote: title, textNote: content)
-            delegate?.entryViewController(self, didSaveNote: updatedNote)
+            var updatedNote: NoteItem
+            if let existingNote = existingNote {
+                updatedNote = existingNote
+                updatedNote.titleNote = title
+                updatedNote.textNote = content
+                delegate?.entryViewController(self, didUpdateNote: updatedNote, at: editingNoteIndex!)
+            } else {
+                updatedNote = NoteItem(titleNote: title, textNote: content)
+                delegate?.entryViewController(self, didSaveNote: updatedNote)
+            }
+            
+            closeEntryController()
         }
-        
-        closeEntryController()
     }
+    
     @objc func closeEntryController() {
         dismiss(animated: true, completion: nil)
     }
