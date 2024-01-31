@@ -56,6 +56,8 @@ class NoteViewController: UIViewController, EntryViewControllerDelegate {
         noteView.tableView.dataSource = self
         noteView.tableView.register(UITableViewCell.self, forCellReuseIdentifier: "noteCell")
         noteView.tableView.allowsSelection = false
+        noteView.tableView.separatorStyle = .singleLine
+        noteView.tableView.separatorColor = UIColor(named: Resources.Colors.beige)
     }
     private func loadNotes() {
         notes = storage.load()
@@ -86,6 +88,7 @@ extension NoteViewController: UITableViewDelegate, UITableViewDataSource {
         let cell = UITableViewCell(style: .subtitle, reuseIdentifier: "noteCell")
         let noteItem = notes[indexPath.row]
         cell.backgroundColor = UIColor(named: Resources.Colors.beige2)
+        cell.layer.cornerRadius = 15
         cell.textLabel?.text = noteItem.titleNote
         cell.textLabel?.font = UIFont.boldSystemFont(ofSize: UIFont.labelFontSize)
         cell.textLabel?.textColor = UIColor(named: Resources.Colors.dark)
